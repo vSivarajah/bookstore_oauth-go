@@ -22,7 +22,7 @@ const (
 
 var (
 	oauthRestClient = rest.RequestBuilder{
-		BaseURL: "http://localhost:8080",
+		BaseURL: "http://localhost:8081",
 		Timeout: 200 * time.Millisecond,
 	}
 )
@@ -77,7 +77,9 @@ func AuthenticateRequest(request *http.Request) *errors.RestErr {
 	}
 	at, err := getAccessToken(accessTokenId)
 	if err != nil {
-		return err
+		if err.Status == http.StatusNotFound {
+			return nil
+		}
 	}
 
 	request.Header.Add(headerXClientId, fmt.Sprintf("%v", at.ClientId))
