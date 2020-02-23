@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -43,27 +44,26 @@ func IsPublic(request *http.Request) bool {
 }
 
 func GetCallerId(request *http.Request) int64 {
-  if request == nil {
-    return 0
-  }
-  callerId, err := strconv.ParseInt(request.Header.Get(headerXCallerId), 10, 64)
-  if err != nil {
-    return 0
-  }
-  return callerId
+	if request == nil {
+		return 0
+	}
+	callerId, err := strconv.ParseInt(request.Header.Get(headerXCallerId), 10, 64)
+	if err != nil {
+		return 0
+	}
+	return callerId
 }
 
 func GetCLientId(request *http.Request) int64 {
-  if request == nil {
-    return 0
-  }
-  clientId, err := strconv.ParseInt(request.Header.Get(headerXClientId), 10, 64)
-  if err != nil {
-    return 0
-  }
-  return clientId
+	if request == nil {
+		return 0
+	}
+	clientId, err := strconv.ParseInt(request.Header.Get(headerXClientId), 10, 64)
+	if err != nil {
+		return 0
+	}
+	return clientId
 }
-
 
 func AuthenticateRequest(request *http.Request) *errors.RestErr {
 	if request == nil {
@@ -79,9 +79,10 @@ func AuthenticateRequest(request *http.Request) *errors.RestErr {
 	if err != nil {
 		return err
 	}
-	request.Header.Add(headerXClientId, fmt.Sprintf("%v", at.ClientId)
-  request.Header.Add(headerXCallerId, fmt.Sprintf("%v", at.UserId)
-  return nil
+
+	request.Header.Add(headerXClientId, fmt.Sprintf("%v", at.ClientId))
+	request.Header.Add(headerXCallerId, fmt.Sprintf("%v", at.UserId))
+	return nil
 }
 
 func cleanRequest(request *http.Request) {
